@@ -1,0 +1,63 @@
+To run:
+1) Go to directory "employee-interview"
+2) Execute for example: java -jar employee-0.0.1-jar-with-dependencies.jar C:\input-files\my-employees.txt 1
+3) Verify console output and output file, always is generated with same input path and file name, only ".out" extension is added,
+   in this example, the output file would be C:\input-files\my-employees.txt.out
+
+To build:
+1) Go to base directory "employee-interview"
+2) Execute: mvn clean package
+3) Copy generated employee-interview\target\employee-0.0.1-jar-with-dependencies.jar to employee-interview\employee-0.0.1-jar-with-dependencies.jar
+
+Functionality:
+Application reads two different layouts, turn into java objects and write in other format and order in an output file. 
+
+Usability:
+If it is executed without parameters, this is the console output:
+
+	C:\workspace\employee-interview>java -jar target\employee-0.0.1-jar-with-dependencies.jar
+	06:09:26.126 [main] INFO  com.interview.employee.app.Main -
+	Incorrect parameters.
+	Usage example:
+	        java -jar employee-0.0.1 C:\input-files\my-employees.txt 1
+	where:
+	        0.0.1 is the version of the application,
+	        the first param C:\input-files\my-employees.txt is the input file path
+	        and the second param 1 is the number of column to order the output.
+	        this second param can take any of these values:
+	                1 -> Order by first name (This is the default value).
+	                2 -> Order by last name.
+	                3 -> Order by start date.
+	Please try again!
+
+Modularity:
+	Strategy and Template design patterns were implemented, this gives high cohesion and low coupling to the application.
+	Only has dependencies for logging and unit testing, I avoided to use other libraries. 
+	
+Maintainability:
+	Core methods are commented, design patterns also promote the easy understanding of this solution.
+
+Analyzability:
+	Easy to track the flow through the code, basically, there is a strategy method with these three steps:
+		1) Map file line to employee 
+		2) Order
+		3) Write to file
+	And this uses a template reader depending on file format code (1 or 2), which also is comformed by three steps:
+		1) Validate line
+		2) Read column values
+		3) Transform column values into employee's attributes
+
+Stability:
+	Layout was defined in a properties file called "employee_layout.properties", it contains these attributes for each column:
+		field length,
+		related property (to corresponding Employee class attribute),
+		regular expression,
+		is required,
+		default value,
+		record size,
+		and the number of fields.
+	So, if a length field changes, it would be necessary only update on this file, for example "field length" and "record size".
+	It allows also use reflection to set file fields to Employee class.
+
+Testability:
+	Includes some common test cases on EmployeeApplicationTest, reading and writing files with its corresponding assertions. 
